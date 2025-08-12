@@ -143,17 +143,114 @@ class QuizGame:
 
 
     def load_questions(self):
-        pass
+        # Clear previous options
+        for button in self.option_buttons:
+            button.destroy()
+        self.option_buttons.clear()
+
+        # Reset selection
+        self.selected_option.set(-1)
+        
+        # Update progress
+        self.progress_label.config(
+            text= f"Question {self.current_question+1} from {len(self.questions)}"
+        )
+        
+        # Load current question
+        question_data = self.questions[self.current_question]
+        self.questions_label.config(text=question_data["question"])
+        
+        # Create option buttons
+        for i, option in enumerate(question_data["options"]):
+            rb = tk.Radiobutton(
+                self.option_frame,
+                text=option,
+                variable=self.selected_option,
+                value=i,
+                font=("Arial", 11),
+                bg="#f0f0f0",
+                fg="#333",
+                selectcolor="#e8e8e8",
+                anchor="w",
+                wraplength=400,
+                justify="left"
+            )
+            rb.pack(anchor="w", pady=5, fill="x")
+            self.option_buttons.append(rb)
+        
+        # Show submit button, hide next button
+        self.submit_btn.pack(side="left", padx=10)
+        self.next_btn.pack_forget()
+        
 
     def submit_answer(self):
-        pass
+        # validation
+        if self.selected_option.get() == -1:
+            messagebox.showwarning("Warning", "Please select an answer!")
+            return
+        
+        # check if answer selected is correct
+        question_data = self.questions[self.current_question]
+        correct_answer = question_data["correct"]
+        option_selected = self.selected_option.get()
 
-    def show_final_result(self):
-        pass
+        if option_selected == correct_answer :
+            self.score+=1
+            messagebox.showinfo("Result", "Correct! ✓")
+        else:
+            correct_text = question_data["options"][correct_answer]
+            messagebox.showinfo("Result", f"Wrong! ✗\nCorrect answer: {correct_text}")
+        
+        # update score display
+        self.score_label.config(text=f"Score: {self.score}/{len(self.questions)}")
+
+        #hide submit button and show next button
+        self.submit_btn.pack_forget()
+        if self.current_question < len(self.questions) - 1:
+            self.next_btn.pack(side="left", padx=10)
+        else:
+            self.show_final_results()
+
 
     def next_question(self):
-        self.current_question+=1
-        self.lod_questions()
+        self.current_question += 1
+        self.load_questions()
+    
+    def show_final_results(self):
+        percentage = (self.score / len(self.questions)) * 100
+        
+        if percentage >= 80:
+            grade = "Excellent! 🌟"
+        elif percentage >= 60:
+            grade = "Good! 👍"
+        elif percentage >= 40:
+            grade = "Fair 📚"
+        else:
+            grade = "Keep practicing! 💪"
+        
+        result_message = f"""
+Quiz Complete!
+
+Final Score: {self.score}/{len(self.questions)}
+Percentage: {percentage:.1f}%
+Grade: {grade}
+
+Would you like to play again?
+        """
+        
+        play_again = messagebox.askyesno("Quiz Complete", result_message)
+        
+        if play_again:
+            self.restart_quiz()
+        else:
+            self.root.quit()
+    
+    def restart_quiz(self):
+        self.current_question = 0
+        self.score = 0
+        random.shuffle(self.questions)
+        self.score_label.config(text=f"Score: {self.score}/{len(self.questions)}")
+        self.load_questions()
 
 
 

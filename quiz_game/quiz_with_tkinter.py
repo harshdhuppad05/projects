@@ -57,7 +57,7 @@ class QuizGame:
             bg="#f0f0f0",
             fg="#333"
         )
-        title_label.pack(pady=21)
+        title_label.pack(pady=20)
         
         # Progress
         self.progress_label = tk.Label(

@@ -98,6 +98,116 @@ class QuizGenerator:
         ]
     
 class TopicDifficultySelector:
-    def __init__(self, topic, difficulty):
-        self.topic = topic
-        self.difficulty = difficulty
+    def __init__(self, callback):
+        self.callback = callback
+        self.setup_selection_window()
+
+    def setup_selection_window(self):
+        self.root = tk.Tk()
+        self.root.title("Quiz Setup")
+        self.root.geometry("400x300")
+        self.root.configure(bg="#f0f0f0")
+
+        title_label = tk.Label(
+            self.root,
+            text="Quiz Generator",
+            font=("Arial", 18, "bold"),
+            bg="#f0f0f0",
+            fg="#333"
+        )
+        title_label.pack(pady=20)
+
+        topic_label = tk.Label(
+            self.root,
+            text="Select Topic",
+            font=("Arial", 12, "bold"),
+            bg="#f0f0f0",
+            fg="#333"
+        )
+        topic_label.pack(pady=10)
+
+
+        self.topic_name = tk.StringVar()
+        topic_frame = tk.Frame(
+            self.root,
+             bg="#f0f0f0"
+        )
+        topic_frame.pack(pady=10)
+        topics = ["Python Programming", "Mathematics", "Science", "History", "Geography", "Literature", "Custom Topic"]
+
+        for topic in topics:
+            rb = tk.Radiobutton(
+                topic_frame,
+                text=topic,
+                variable=self.topic_var,
+                value=topic,
+                bg="#f0f0f0",
+                fg="#333",
+                font=("Arial", 10)
+            )
+            rb.pack(anchor="w")
+
+        self.custom_topic_var = tk.StringVar()
+        custom_label = tk.Label(
+            self.root,
+            text="If Custom Topic, specify below:",
+            font=("Arial", 10),
+            bg="#f0f0f0",
+            fg="#666"
+        )
+        custom_label.pack(pady=(10, 5))
+
+        self.custom_entry = tk.Entry(
+            self.root,
+            textvariable=self.custom_topic_var,
+            font=("Arial", 10),
+            width=30
+        )
+
+        self.custom_entry.pack(pady= 5)
+
+        difficulty_label = tk.Label(
+            self.root,
+            text="Select Difficulty:",
+            font=("Arial", 12, "bold"),
+            bg="#f0f0f0",
+            fg="#333"
+        )
+        difficulty_label.pack(pady=(20, 10))
+
+        self.difficulty_var = tk.StringVar()
+        difficulty_frame = tk.Frame(self.root, bg="#f0f0f0")
+        difficulty_frame.pack(pady=10)
+        
+        difficulties = ["Easy", "Medium", "Hard"]
+        for difficulty in difficulties:
+            rb = tk.Radiobutton(
+                difficulty_frame,
+                text=difficulty,
+                variable=self.difficulty_var,
+                value=difficulty,
+                bg="#f0f0f0",
+                fg="#333",
+                font=("Arial", 10)
+            )
+            rb.pack(side="left", padx=20)
+
+        generate_btn = tk.Button(
+            self.root,
+            text="Generate Quiz",
+            command=self.generate_quiz,
+            font=("Arial", 12, "bold"),
+            bg="#4CAF50",
+            fg="white",
+            padx=30,
+            pady=10,
+            cursor="hand2"
+        )
+        generate_btn.pack(pady=30)
+        
+        # Set defaults
+        self.topic_var.set("Python Programming")
+        self.difficulty_var.set("Medium")
+
+    def run(self):
+        self.root.mainloop()

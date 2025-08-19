@@ -1,0 +1,15 @@
+first create a simple ansking game
+
+create a beautiful UI with confetti on right answer and shake on wrong answer
+create a box for it
+
+use ai to genreate questions and check answers
+
+first make UI in python using tkinter
+then make UI using HTML css and JS
+
+for integrating we cam use Flask or fastAPi
+or we can use Electron and python script as a sup process
+
+
+also implement multiple choice questions
